@@ -15,7 +15,7 @@ spec:
         app: petclinic
     spec:
       containers:
-      - image: webinarzenacr.azurecr.io/v2/petclinic:latest
+      - image: webinarzenacr.azurecr.io/petclinic:8
         name: petclinic
 ---
 apiVersion: v1

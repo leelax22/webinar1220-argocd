@@ -17,6 +17,13 @@ spec:
       containers:
       - image: webinarzenacr.azurecr.io/petclinic:8
         name: petclinic
+	  volumeMounts:
+	  - name: azurefile
+	    mountPath: /usr/local/tomcat/webapps/ROOT/resources
+	volumes:
+	- name: azurefile
+	  persistentVolumeClaim:
+	    claimName: azurefile
 ---
 apiVersion: v1
 kind: Service
@@ -34,3 +41,48 @@ spec:
     targetPort: 8080
   selector:
     app: petclinic
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: file.csi.azure.com
+  name: azurefile
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile
+  csi:
+    driver: file.csi.azure.com
+    volumeHandle: unique-volumeid
+    volumeAttributes:
+      resourceGroup: webinar-spokerg
+      shareName: fileshare01
+    nodeStageSecretRef:
+      name: azure-secret
+      namespace: default
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+    - nobrl
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: azurefile
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azurefile
+  volumeName: azurefile
+  resources:
+    requests:
+      storage: 5Gi

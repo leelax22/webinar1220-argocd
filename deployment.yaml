@@ -15,15 +15,15 @@ spec:
         app: petclinic
     spec:
       containers:
-      - image: webinarzenacr.azurecr.io/petclinic:8
+      - image: webinarzenacr.azurecr.io/petclinic:12
         name: petclinic
-	  volumeMounts:
-	  - name: azurefile
-	    mountPath: /usr/local/tomcat/webapps/ROOT/resources
-	volumes:
-	- name: azurefile
-	  persistentVolumeClaim:
-	    claimName: azurefile
+        volumeMounts:
+        - name: azurefile
+          mountPath: /testMount
+      volumes:
+      - name: azurefile
+        persistentVolumeClaim:
+          claimName: azurefile
 ---
 apiVersion: v1
 kind: Service
@@ -86,3 +86,4 @@ spec:
   resources:
     requests:
       storage: 5Gi
+

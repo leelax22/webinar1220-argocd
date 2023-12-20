@@ -15,7 +15,7 @@ spec:
         app: petclinic
     spec:
       containers:
-      - image: webinarzenacr.azurecr.io/petclinic:18
+      - image: webinarzenacr.azurecr.io/petclinic:19
         name: petclinic
         volumeMounts:
         - name: azurefile
